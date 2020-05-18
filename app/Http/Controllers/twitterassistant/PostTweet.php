@@ -71,6 +71,42 @@ class PostTweet extends Controller
 		$userpost->contant  	= $tweet;
 		$userpost->save();
 	}
+	function publishTweetWithImage($message,$image,$val) {
+		$image = explode("?", $image);
+	
+		$config = config('constants.twitterassistant');
+
+		\Codebird\Codebird::setConsumerKey($config['CONSUMER_KEY'], $config['CONSUMER_SECRET']); 
+		$cb 	= 	\Codebird\Codebird::getInstance();
+		$cb->setToken($config['ACCESS_TOKEN'],$config['ACCESS_TOKEN_SECRET']);
+		
+		session(['oauth_token' => $val->get_oauth_token,
+				'oauth_token_secret'=>$val->get_oauth_token_secret
+		]);
+		//echo $image[0]; die();
+		$cb->setToken($val->oauth_token, $val->oauth_token_secret);
+		$reply = $cb->media_upload(array(
+		    'media' => 'https://www.lego.com/cdn/cs/set/assets/blta19027fc88fb787f/70848.jpg'
+		));
+		$mediaID = $reply->image;
+		//echo $mediaID; die();
+
+		$params = array(
+		    'status' => $message,
+		    'media_ids' => $mediaID
+		);
+		$reply = $cb->statuses_update($params);
+		echo "<pre>"; print_r($reply); die();
+		if(isset($reply->errors[0])){
+			$code 	=	$reply->errors[0];
+			return $code->code;
+		}
+		if(isset($reply->id)){
+			return $reply->id;
+		}
+		return false;
+
+	}
 	public function publishTweet($tweet,$val)	{
 		$config = config('constants.twitterassistant');
 
@@ -105,15 +141,17 @@ class PostTweet extends Controller
 			foreach($account as $val)	{
 				if($val->categories != "") {
 					//echo "<pre>"; print_r($val->posted_id); die();
-					$cat 		=	($val->categories != "")?' AND  p.c_id IN ('.$val->categories.')':"";
+					
 					$sql 		=	'SELECT *,p.p_id as post_id FROM twas_posts p WHERE p.p_id > '.$val->posted_id.'
-								 '.$cat.' ORDER BY p.p_id ASC  LIMIT 1';
+								  ORDER BY p.p_id ASC  LIMIT 1';
 					//echo $sql."<br>"; 
 					$news 		=	 DB::select(DB::raw($sql));
 					//echo "<pre>"; print_r($news); die();
 					if($news){
 						foreach($news as $ival)	{
-							$tweet =	$this->makeTweet($ival->title,$ival);
+							//$tweet =	$this->makeTweet($ival->title,$ival);
+							$tweet = $ival->title;
+							$image = $ival->slug;
 							
 							/*
 							*
@@ -121,7 +159,7 @@ class PostTweet extends Controller
 							*
 							*/
 							//echo $tweet; die();
-							$id =	$this->publishTweet($tweet,$val);
+							$id =	$this->publishTweetWithImage($tweet,$image,$val);
 							/*
 							*
 							*UPDAT THE ACCOUNT TABLE
