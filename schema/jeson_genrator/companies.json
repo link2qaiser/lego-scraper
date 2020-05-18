@@ -1,0 +1,21 @@
+[
+  '{{repeat(5, 7)}}',
+  {
+    company_name:'{{company()}}',
+    display_name:'{{company()}}',
+    address1:'{{integer(100, 999)}} {{street()}}, {{city()}}, {{state()}}, {{integer(100, 10000)}}',
+    address2:'{{integer(100, 999)}} {{street()}}, {{city()}}, {{state()}}, {{integer(100, 10000)}}',
+    city:'{{city()}}',
+    state:'{{street()}}',
+    zipcode:'{{integer(100, 10000)}}',
+    country:'US',
+    billing_address1:'{{integer(100, 999)}} {{street()}}, {{city()}}, {{state()}}, {{integer(100, 10000)}}',
+    billing_address2:'{{integer(100, 999)}} {{street()}}, {{city()}}, {{state()}}, {{integer(100, 10000)}}',
+    billing_city:'{{city()}}',
+    billing_state:'{{street()}}',
+    billing_zipcode:'{{integer(100, 10000)}}',
+    contact_row:'{{objectId()}}',
+    logo:'{{objectId()}}',
+    disclaimer:'{{lorem(1, "words")}}'
+  }
+]

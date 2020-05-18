@@ -1,0 +1,13 @@
+#Bulk insert command
+
+curl -H "Content-Type: application/json" -XPOST 'localhost:9200/newdevlinqplus/user/_bulk?pretty&refresh' --data-binary "@user.json"
+
+#delete the indices
+curl -XDELETE 'localhost:9200/DELETE/newdevlinqplus/user?pretty'
+
+## Root level call
+curl 'localhost:9200/_cat?v'
+
+## Show indices
+curl 'localhost:9200/_cat/indices?v'
+

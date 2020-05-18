@@ -1,0 +1,5 @@
+engine = pyttsx.init()
+rate = engine.getProperty('rate')
+engine.setProperty('rate', rate)
+engine.say('The quick brown fox jumped over the lazy dog.')
+engine.runAndWait()

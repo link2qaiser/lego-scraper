@@ -1,0 +1,10 @@
+/vendor
+/node_modules
+/files
+/assets
+/storage
+/media
+/storage
+/vendor
+.env
+.zip
